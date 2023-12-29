@@ -1,0 +1,58 @@
+• 1 Создать таблицу в БД VillaNumbers
+
+Для этого 
+
+	1.1 В  ApplicationDbContext создаем 
+		public DbSet<VillaNumber> VillaNumbers{ get; set; } // это свойство !!!!
+
+	1.2 Выполним миграцию: 
+		Для этого откроем “Консоль диспетчера пакетов”
+		В нем выполняем две команды:
+
+		1.2.1 Выполним первую команду для создания новой миграции:
+				Переходим в “Консоль диспетчера пакетов”> Add-Migration Имя Миграции
+
+		1.2.2 Выполним вторую команду применения миграции и обновления базы данных:
+				Переходим в “Консоль диспетчера пакетов”> update-database
+
+   После выполнения этих двух команд в БД должна появиться новая таблица VillaNumbers
+
+   1.3 Проверяем успешность создания в БД таблицы VillaNumbers
+		Для этого в SQL Server Management Studio проверяем создана ли таблица с именем VillaNumbers
+		Запускаем SQL Server Management Studio> Connect > Базы данных > MagicVilla > dbo.VillaNumbers > правая клавиша мыши > выбрать первые 200 записей 
+
+
+• 2 Создать репозиторий VillaNumberRepository
+
+	2.1 Создаем интерфейс IVillaNumberRepository.cs
+	
+	public interface IVillaNumberRepository : IRepository<VillaNumber>
+    {
+        Task<VillaNumber> UpdateAsync(VillaNumber entity);
+    }
+
+	2.2 Создаем репозиторий VillaNumberRepository.cs
+	 
+	 public class VillaNumberRepository : Repository<VillaNumber>, IVillaNumberRepository
+
+• 3 Создать контроллер VillaNumberController
+
+!!! А теперь чтобы все это ЗАРАБОТАЛО надо в ОБЯЗАТЕЛЬНОМ порядке
+  
+  > MappingConfig.cs 
+	В файле MappingConfig.cs сделать 
+	
+            CreateMap<VillaNumberCreateDTO, VillaNumber>()
+                .ForMember(v => v.CreatedDate, o => o.MapFrom(src => DateTime.Now))
+                .ForMember(v => v.UpdatedDate, o => o.MapFrom(src => DateTime.Now));
+
+            CreateMap<VillaNumber, VillaNumberCreateDTO>();
+	
+	> в Program.cs зарегестрировать репозиторий
+	builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
+
+
+	
+
+
+
