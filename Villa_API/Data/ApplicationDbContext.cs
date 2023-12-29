@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Villa_API.Models.Villa;
-using Villa_API.Models.Villa.DTO;
 using Villa_API.Models.VillaNumberModel;
 
 namespace Villa_API.Data
